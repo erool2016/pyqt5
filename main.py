@@ -17,15 +17,15 @@ class Cell:
     def __init__(self, number, capacity):
         self.number = number  # Номер ячейки
         self.capacity = capacity  # Вместимость ячейки
-        self.contents = {}  # Содержимое ячейки (наименование товара и количество)
-
-    def add_rolls(self, product_name, quantity,date):
-        """Добавляет ролики в ячейку."""
-        if product_name in self.contents:
-            self.contents[product_name] += [quantity,date]  # Увеличиваем количество товара
-
-        else:
-            self.contents[product_name] = [quantity,date]  # Добавляем новый товар
+        # self.contents = {}  # Содержимое ячейки (наименование товара и количество)
+        self.contents = []
+    # def add_rolls(self, product_name, quantity,date):
+    #     """Добавляет ролики в ячейку."""
+    #     if product_name in self.contents:
+    #         self.contents[product_name] += [quantity,date]  # Увеличиваем количество товара
+    #
+    #     else:
+    #         self.contents[product_name] = [quantity,date]  # Добавляем новый товар
 
     def get_info(self):
         """Возвращает информацию о ячейке и её содержимом."""
@@ -49,8 +49,8 @@ cells = [
             Cell(1, 54),
             Cell(2, 50),
         ] + [Cell(i, 48) for i in range(3, 31)] + [
-            Cell('Торец1', 42),
-            Cell('Торец2', 36)
+            Cell(101, 42),
+            Cell(102, 36)
         ]
 
 # Создание списка товаров из десяти наименований

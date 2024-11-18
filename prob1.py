@@ -3,6 +3,9 @@ from PyQt5.QtWidgets import QApplication, QWidget,QInputDialog, QPushButton, QVB
 from PyQt5.QtCore import pyqtSignal, QObject
 from prob2 import list,show_list,added_rolls
 from main import Roll,Cell,cells,products,display_all_cells
+from db import insert_data_to_cells, create_table, drop_table, show_all_cells, create_cell_to_table, update_roll, \
+    get_info_cell
+
 
 class MyApp(QWidget):
     def __init__(self):
@@ -51,24 +54,64 @@ class MyApp(QWidget):
         self.setLayout(main_layout)
 
     def show_all(self):
+        """Выводит информацию обо всех ячейках."""
         self.clear_area()
-        # itog = '\n'.join(show_list(list))  # Преобразуем список товаров в строку
-        itog = '\n'.join(display_all_cells(products))
-        result = "Все элементы:\n" + itog  # Формируем результат
-        self.display_result(result)
+        result = "\n"
+        res = []
+        for cell in cells:
+            print(f'cell number {cell.number}')
+            res.append(get_info_cell(cell.number))
 
-    def add_roll(self):
-        self.clear_area()
+            # print(get_info_cell(cell.number))
+            # result += cell.get_info_cell(cell.number) + "\n"
+        print(f'show_all {res}')
+        for i in res:
+            print(i)
+            self.display_result(f'{res[0]}{res[1]}')
+        # self.display_result(res)
+        # itog = '\n'.join(show_list(list))  # Преобразуем список товаров в строку
+        # itog = '\n'.join(display_all_cells(products))
+        # result = "Все элементы:\n" + itog  # Формируем результат
+        # self.display_result(result)
+
+
 
 
     def show_empty(self):
-        self.clear_area()
-        result = "Показаны пустые элементы."
+        """Выводит номера пустых ячеек."""
+        result = "Пустые ячейки:\n"
+        empty_cells = [cell.number for cell in cells if cell.is_empty()]
+
+        if empty_cells:
+            result += ", ".join(map(str, empty_cells))
+        else:
+            result += "Нет пустых ячеек."
+
         self.display_result(result)
+        # self.clear_area()
+        # result = "Показаны пустые элементы."
+        # self.display_result(result)
 
     def show_full(self):
         result = "Показаны полные элементы."
-        self.display_result(result)
+        self.clear_area()
+        result = "\n"
+        res = []
+        for cell in cells:
+            # print(f'cell number {cell.number}')
+            res.append(get_info_cell(cell.number))
+
+            # print(get_info_cell(cell.number))
+            # result += cell.get_info_cell(cell.number) + "\n"
+        print(f'show_all {res}')
+        for i in res:
+            print(i[0][0])
+
+            # print(i)
+            #     self.display_result(f'{res[0]}{res[1]}')
+        # res = show_all_cells()
+        # self.display_result(res[0])
+        # print(f'res {res[0]}')
 
     def save(self):
         result = "Данные сохранены."
@@ -93,14 +136,35 @@ class MyApp(QWidget):
                 quantity, ok3 = QInputDialog.getInt(self, 'Введите количество роликов', 'Количество:', min=1)
 
                 if ok3:
-                    # Сохраняем введенные данные в список
-                    added_rolls.append(f'{roll_name} - Дата: {production_date}, Количество: {quantity}')
-                    self.display_result(f'Добавлено: {roll_name} - Дата: {production_date}, Количество: {quantity}')
-    # def keyPressEvent(self, e):
+                    namber_cell, ok4 = QInputDialog.getInt(self, 'Введите номер ячейки,','Номер',min=1)
+
+                    if ok4:
+                        # Сохраняем введенные данные в список
+                        # added_rolls.append(f'{roll_name} - Дата: {production_date}, Количество: {quantity},number_cell {namber_cell}')
+                        added_rolls.append(roll_name)
+                        added_rolls.append(production_date)
+                        added_rolls.append(quantity)
+                        added_rolls.append(namber_cell)
+                        print(added_rolls)
+                        # insert_data_to_cells(added_rolls)
+                        update_roll(roll_name,namber_cell, production_date, quantity)
+                        self.display_result(f'Добавлено: {roll_name}  Дата: {production_date}, Количество: {quantity}, Номер ячейки: {namber_cell}'
+                                           )
+                        self.display_result(f'все ячейки {show_all_cells()}')
+                        print(f'все ячейки {show_all_cells()}')
+
+
+
+
+
+                        # def keyPressEvent(self, e):
     #     if e.key() == Qt.Key_F12:
     #         self.close()
 
 if __name__ == '__main__':
+    # drop_table()
+    # create_table()
+    # create_cell_to_table()
     app = QApplication(sys.argv)
     ex = MyApp()
     ex.resize(600, 400)  # Устанавливаем размер окна

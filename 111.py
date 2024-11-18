@@ -30,6 +30,7 @@ class Cell:
 
     def is_empty(self):
         """Проверяет, пуста ли ячейка."""
+        print(len(self.contents) == 0)
         return len(self.contents) == 0
 
     def can_add_product(self, product_name, quantity):
